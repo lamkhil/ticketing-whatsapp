@@ -235,7 +235,8 @@ const messages = {
         },
         tabs: {
           open: { title: "Inbox" },
-          closed: { title: "Resolved" },
+          unclosed: { title: "Gagal Closing" },
+          closed: { title: "Closing" },
           search: { title: "Search" },
         },
         search: {
@@ -377,7 +378,8 @@ const messages = {
           assignedTo: "Assigned to:",
           buttons: {
             return: "Return",
-            resolve: "Resolve",
+            unresolve: "Gagal Closing",
+            resolve: "Closing",
             reopen: "Reopen",
             accept: "Accept",
           },

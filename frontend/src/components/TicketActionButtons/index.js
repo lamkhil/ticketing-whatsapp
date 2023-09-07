@@ -62,7 +62,7 @@ const TicketActionButtons = ({ ticket }) => {
 
 	return (
 		<div className={classes.actionButtons}>
-			{ticket.status === "closed" && (
+			{(ticket.status === "closed" || ticket.status === "unclosed") && (
 				<ButtonWithSpinner
 					loading={loading}
 					startIcon={<Replay />}
@@ -81,6 +81,15 @@ const TicketActionButtons = ({ ticket }) => {
 						onClick={e => handleUpdateTicketStatus(e, "pending", null)}
 					>
 						{i18n.t("messagesList.header.buttons.return")}
+					</ButtonWithSpinner>
+					<ButtonWithSpinner
+						loading={loading}
+						size="small"
+						variant="contained"
+						color="secondary"
+						onClick={e => handleUpdateTicketStatus(e, "unclosed", user?.id)}
+					>
+						{i18n.t("messagesList.header.buttons.unresolve")}
 					</ButtonWithSpinner>
 					<ButtonWithSpinner
 						loading={loading}

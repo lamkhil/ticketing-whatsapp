@@ -22,6 +22,7 @@ import { AuthContext } from "../../context/Auth/AuthContext";
 import { Can } from "../Can";
 import TicketsQueueSelect from "../TicketsQueueSelect";
 import { Button } from "@material-ui/core";
+import { Cancel } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   ticketsWrapper: {
@@ -176,6 +177,12 @@ const TicketsManager = () => {
             classes={{ root: classes.tab }}
           />
           <Tab
+            value={"unclosed"}
+            icon={<Cancel />}
+            label={i18n.t("tickets.tabs.unclosed.title")}
+            classes={{ root: classes.tab }}
+          />
+          <Tab
             value={"closed"}
             icon={<CheckBoxIcon />}
             label={i18n.t("tickets.tabs.closed.title")}
@@ -288,6 +295,13 @@ const TicketsManager = () => {
             style={applyPanelStyle("pending")}
           />
         </Paper>
+      </TabPanel>
+      <TabPanel value={tab} name="unclosed" className={classes.ticketsWrapper}>
+        <TicketsList
+          status="unclosed"
+          showAll={true}
+          selectedQueueIds={selectedQueueIds}
+        />
       </TabPanel>
       <TabPanel value={tab} name="closed" className={classes.ticketsWrapper}>
         <TicketsList
