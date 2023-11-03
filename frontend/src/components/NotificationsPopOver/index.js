@@ -83,7 +83,7 @@ const NotificationsPopOver = () => {
 		socket.on("connect", () => socket.emit("joinNotification"));
 
 		socket.on("ticket", data => {
-			if (data.action === "updateUnread" || data.action === "delete") {
+			if ((data.action === "updateUnread" || data.action === "delete") && data.ticket.whatsappId === user?.whatsappId) {
 				setNotifications(prevState => {
 					const ticketIndex = prevState.findIndex(t => t.id === data.ticketId);
 					if (ticketIndex !== -1) {
