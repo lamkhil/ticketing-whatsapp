@@ -138,7 +138,7 @@ const ListTicketsService = async ({
   const offset = limit * (+pageNumber - 1);
 
   const { count, rows: tickets } = await Ticket.findAndCountAll({
-    where: whereCondition,
+    where: { ...whereCondition, whatsappId},
     include: includeCondition,
     distinct: true,
     limit,
