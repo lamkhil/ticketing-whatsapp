@@ -8,6 +8,7 @@ interface SerializedUser {
   email: string;
   profile: string;
   queues: Queue[];
+  whatsappId: number;
   whatsapp: Whatsapp;
 }
 
@@ -18,6 +19,7 @@ export const SerializeUser = (user: User): SerializedUser => {
     email: user.email,
     profile: user.profile,
     queues: user.queues,
-    whatsapp: user.whatsapp
+    whatsapp: user.whatsapp,
+    whatsappId: user.whatsappId
   };
 };
