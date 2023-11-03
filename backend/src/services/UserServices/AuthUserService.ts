@@ -12,6 +12,7 @@ interface SerializedUser {
   name: string;
   email: string;
   profile: string;
+  whatsappId: number;
   queues: Queue[];
 }
 
