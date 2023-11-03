@@ -8,6 +8,7 @@ import ShowTicketService from "../services/TicketServices/ShowTicketService";
 import UpdateTicketService from "../services/TicketServices/UpdateTicketService";
 import SendWhatsAppMessage from "../services/WbotServices/SendWhatsAppMessage";
 import ShowWhatsAppService from "../services/WhatsappService/ShowWhatsAppService";
+import ShowUserService from "../services/UserServices/ShowUserService";
 import formatBody from "../helpers/Mustache";
 
 type IndexQuery = {
@@ -39,6 +40,8 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
   } = req.query as IndexQuery;
 
   const userId = req.user.id;
+  const user = await ShowUserService(userId);
+  const whatsappId = user.whatsappId;
 
   let queueIds: number[] = [];
 
@@ -53,6 +56,7 @@ export const index = async (req: Request, res: Response): Promise<Response> => {
     date,
     showAll,
     userId,
+    whatsappId,
     queueIds,
     withUnreadMessages
   });

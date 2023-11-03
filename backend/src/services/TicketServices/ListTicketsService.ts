@@ -17,6 +17,7 @@ interface Request {
   userId: string;
   withUnreadMessages?: string;
   queueIds: number[];
+  whatsappId: number;
 }
 
 interface Response {
@@ -33,6 +34,7 @@ const ListTicketsService = async ({
   date,
   showAll,
   userId,
+  whatsappId,
   withUnreadMessages
 }: Request): Promise<Response> => {
   let whereCondition: Filterable["where"] = {

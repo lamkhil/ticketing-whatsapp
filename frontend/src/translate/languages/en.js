@@ -41,7 +41,7 @@ const messages = {
         },
         messages: {
           inAttendance: {
-            title: "In Service"
+            title: "Ongoing"
           },
           waiting: {
             title: "Waiting"
