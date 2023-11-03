@@ -8,7 +8,8 @@ let io: SocketIO;
 export const initIO = (httpServer: Server): SocketIO => {
   io = new SocketIO(httpServer, {
     cors: {
-      origin: process.env.FRONTEND_URL
+      //origin: process.env.FRONTEND_URL
+      origin: "*",
     }
   });
 
