@@ -184,12 +184,12 @@ const reducer = (state, action) => {
 	useEffect(() => {
 		const socket = openSocket();
 
-		const shouldUpdateTicket = ticket => !searchParam && ticket.whatsappId == user?.whatsappId &&
+		const shouldUpdateTicket = ticket => !searchParam && ticket.whatsappId === user?.whatsappId &&
 			(!ticket.userId || ticket.userId === user?.id || showAll) &&
 			(!ticket.queueId || selectedQueueIds.indexOf(ticket.queueId) > -1);
 
 		const notBelongsToUserQueues = ticket =>
-			ticket.queueId && selectedQueueIds.indexOf(ticket.queueId) === -1;
+			ticket.queueId && selectedQueueIds.indexOf(ticket.queueId) === -1 && ticket.whatsappId !== user?.whatsappId;
 
 		socket.on("connect", () => {
 			if (status) {
@@ -200,28 +200,27 @@ const reducer = (state, action) => {
 		});
 
 		socket.on("ticket", data => {
-			if(data.ticket.whatsappId == user?.whatsappId){
-				if (data.action === "updateUnread") {
-					dispatch({
-						type: "RESET_UNREAD",
-						payload: data.ticketId,
-					});
-				}
-	
-				if (data.action === "update" && shouldUpdateTicket(data.ticket)) {
-					dispatch({
-						type: "UPDATE_TICKET",
-						payload: data.ticket,
-					});
-				}
-	
-				if (data.action === "update" && notBelongsToUserQueues(data.ticket)) {
-					dispatch({ type: "DELETE_TICKET", payload: data.ticket.id });
-				}
-	
-				if (data.action === "delete") {
-					dispatch({ type: "DELETE_TICKET", payload: data.ticketId });
-				}
+			console.log(data);
+			if (data.action === "updateUnread") {
+				dispatch({
+					type: "RESET_UNREAD",
+					payload: data.ticketId,
+				});
+			}
+
+			if (data.action === "update" && shouldUpdateTicket(data.ticket)) {
+				dispatch({
+					type: "UPDATE_TICKET",
+					payload: data.ticket,
+				});
+			}
+
+			if (data.action === "update" && notBelongsToUserQueues(data.ticket)) {
+				dispatch({ type: "DELETE_TICKET", payload: data.ticket.id });
+			}
+
+			if (data.action === "delete") {
+				dispatch({ type: "DELETE_TICKET", payload: data.ticketId });
 			}
 		});
 
