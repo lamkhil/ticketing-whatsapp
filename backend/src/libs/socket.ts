@@ -9,7 +9,7 @@ export const initIO = (httpServer: Server): SocketIO => {
   io = new SocketIO(httpServer, {
     cors: {
       //origin: process.env.FRONTEND_URL
-      origin: "*",
+      origin: [process.env.FRONTEND_URL?.toString()??'http://localhost:3333', "http://localhost:3000"],
     }
   });
 
