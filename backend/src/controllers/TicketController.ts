@@ -142,6 +142,10 @@ export const remove = async (
 
 export const download = async (req: Request, res: Response) => {
 
+
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', 'attachment; filename="data.xlsx"');
+
   const { tickets } = await DownloadTicketService();
 
   const workbook = new ExcelJS.Workbook();
@@ -186,8 +190,6 @@ export const download = async (req: Request, res: Response) => {
 
   workbook.xlsx.writeBuffer()
     .then(buffer => {
-      res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-      res.setHeader('Content-Disposition', 'attachment; filename="data.xlsx"');
       res.send(Buffer.from(buffer));
     })
     .catch(error => {
