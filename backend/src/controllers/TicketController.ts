@@ -202,11 +202,8 @@ export const download2 = async (req: Request, res: Response) => {
 
   res.writeHead(200, {
     'Content-Type': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'Content-Disposition': 'attachment; filename="data.xlsx"',
-    'Transfer-Encoding':'chunked'
+    'Content-Disposition': 'attachment; filename="data.xlsx"'
   });
-
-  res.writeProcessing();
   
   const { tickets } = await DownloadTicketService();
 
