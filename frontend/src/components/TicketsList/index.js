@@ -184,7 +184,7 @@ const reducer = (state, action) => {
 	useEffect(() => {
 		const socket = openSocket();
 
-		const shouldUpdateTicket = ticket => !searchParam && ticket.whatsappId === user?.whatsappId &&
+		const shouldUpdateTicket = ticket => !searchParam && (user.profile === 'admin'||ticket.whatsappId === user?.whatsappId) &&
 			(!ticket.userId || ticket.userId === user?.id || showAll) &&
 			(!ticket.queueId || selectedQueueIds.indexOf(ticket.queueId) > -1);
 

@@ -111,7 +111,7 @@ const NotificationsPopOver = () => {
 			if (
 				data.action === "create" &&
 				!data.message.read &&
-				(data.ticket.userId === user?.id || !data.ticket.userId) && data.ticket.whatsappId === user?.whatsappId
+				(data.ticket.userId === user?.id || !data.ticket.userId) && (user.profile === 'admin'|| data.ticket.whatsappId === user?.whatsappId)
 			) {
 				setNotifications(prevState => {
 					const ticketIndex = prevState.findIndex(t => t.id === data.ticket.id);

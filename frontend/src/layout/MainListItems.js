@@ -13,6 +13,7 @@ import SyncAltIcon from "@material-ui/icons/SyncAlt";
 import SettingsOutlinedIcon from "@material-ui/icons/SettingsOutlined";
 import PeopleAltOutlinedIcon from "@material-ui/icons/PeopleAltOutlined";
 import ContactPhoneOutlinedIcon from "@material-ui/icons/ContactPhoneOutlined";
+import DoneIcon from "@material-ui/icons/Done";
 import AccountTreeOutlinedIcon from "@material-ui/icons/AccountTreeOutlined";
 import QuestionAnswerOutlinedIcon from "@material-ui/icons/QuestionAnswerOutlined";
 
@@ -126,6 +127,19 @@ const MainListItems = (props) => {
               primary={i18n.t("mainDrawer.listItems.settings")}
               icon={<SettingsOutlinedIcon />}
             />
+            <a href="https://api.aturchat.com/download" target="_blank" style={
+              {
+                "text-decoration": "none",
+  "color": "black"
+              }
+            }>
+              <li>
+                <ListItem>
+                  <ListItemIcon>{<DoneIcon />}</ListItemIcon>
+                  <ListItemText primary={"Download Excel"} />
+                </ListItem>
+              </li>
+            </a>
           </>
         )}
       />

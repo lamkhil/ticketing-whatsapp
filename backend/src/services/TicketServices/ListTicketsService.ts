@@ -18,6 +18,7 @@ interface Request {
   withUnreadMessages?: string;
   queueIds: number[];
   whatsappId: number;
+  profile: string;
 }
 
 interface Response {
@@ -35,7 +36,8 @@ const ListTicketsService = async ({
   showAll,
   userId,
   whatsappId,
-  withUnreadMessages
+  withUnreadMessages,
+  profile
 }: Request): Promise<Response> => {
   let whereCondition: Filterable["where"] = {
     [Op.or]: [{ userId }, { status: "pending" }],
@@ -138,7 +140,7 @@ const ListTicketsService = async ({
   const offset = limit * (+pageNumber - 1);
 
   const { count, rows: tickets } = await Ticket.findAndCountAll({
-    where: { ...whereCondition, whatsappId},
+    where: profile === 'admin'? { ...whereCondition }: { ...whereCondition, whatsappId },
     include: includeCondition,
     distinct: true,
     limit,
