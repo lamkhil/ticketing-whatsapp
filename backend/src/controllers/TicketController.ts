@@ -234,7 +234,7 @@ export const download2 = async (req: Request, res: Response) => {
           secondsDiffCustomer = Math.floor((message.createdAt.getTime() - messages[j - 1].createdAt.getTime()) / 1000);
         }
       }
-      worksheet.addRow([ticket.id, ticket.contact.name, ticket.contact.number, "-", "-", "-", "-", message.body, message.body.length, message.fromMe ? "" : message.body, message.fromMe ? message.body : "", message.createdAt, secondsDiffCustomer, secondsDiffCS, ticket.status]);
+      worksheet.addRow([ticket.id, ticket.contact.name, ticket.contact.number, "-", "-", "-", "-", message.body, message.body.length, message.fromMe ? "" : message.body, message.fromMe ? message.body : "", message.createdAt, secondsDiffCustomer, secondsDiffCS, ticket.status]).commit();
       row++;
     }
     if ((row-1)>rowStart) {
@@ -250,7 +250,7 @@ export const download2 = async (req: Request, res: Response) => {
 
   }
 
-  workbook.commit();
+  await workbook.commit();
   res.end();
 };
 
