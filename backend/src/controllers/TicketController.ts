@@ -223,7 +223,7 @@ export const download = async (req: Request, res: Response) => {
       worksheet.mergeCells('F' + rowStart + ':F' + (row - 1));
       worksheet.mergeCells('G' + rowStart + ':G' + (row - 1));
       worksheet.mergeCells('H' + rowStart + ':H' + (row - 1));
-      worksheet.mergeCells('O' + rowStart + ':O' + (row - 1));
+      worksheet.mergeCells('P' + rowStart + ':P' + (row - 1));
       worksheet.getRow(row - 1).commit();
     }
 
