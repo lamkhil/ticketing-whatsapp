@@ -152,7 +152,7 @@ export const download = async (req: Request, res: Response) => {
   const workbook = new ExcelJS.stream.xlsx.WorkbookWriter({ stream: res });
   const worksheet = workbook.addWorksheet('Tickets');
 
-  worksheet.addRow(["id", "customer_name", "cs_name", "customer_number", "address", "subdistrict", "city", "province","produk", "chat_text", "content_length", "chat_customer", "chat_cs", "timestamp", "customer_response_time", "cs_response_time", "label"]);
+  worksheet.addRow(["id", "customer_name", "cs_name", "customer_number", "address", "subdistrict", "city", "province", "produk", "chat_text", "content_length", "chat_customer", "chat_cs", "timestamp", "customer_response_time", "cs_response_time", "label"]);
   let row = 2;
   for (let i = 0; i < tickets.length; i++) {
     const ticket = tickets[i];
@@ -179,43 +179,49 @@ export const download = async (req: Request, res: Response) => {
       let kota = '';
       let provinsi = '';
       let produk = '';
+      let noHp = ticket.contact.number;
 
       if (message.body.includes('Alamat') && message.body.includes('Nama') && message.body.includes('Kecamatan') && message.body.includes('Kota Kab') && message.body.includes('Provinsi') && message.body.includes('Produk')) {
-        const messageExplode = message.body.split('*');
-        for (let index = 0; index < messageExplode.length; index++) {
-          if (index == 0) {
-            continue;
-          }
 
+        const text = message.body;
 
-          const label = messageExplode[index - 1];
+        // Mencocokkan nama
+        const namaRegex = /\*Nama\* : ([^\n]+)/;
+        const namaMatch = text.match(namaRegex);
+        nama = namaMatch ? namaMatch[1] : '';
 
-          switch (label) {
-            case "Alamat":
-              alamat = messageExplode[index].replace(': ','');
-              break;
-            case "Nama":
-              nama = messageExplode[index].replace(': ','');
-              break;
-            case "Kecamatan":
-              kecamatan = messageExplode[index].replace(': ','');
-              break;
-            case "Kota Kab":
-              kota = messageExplode[index].replace(': ','');
-              break;
-            case "Provinsi":
-              provinsi = messageExplode[index].replace(': ','');
-              break;
-              case "Produk":
-              produk = messageExplode[index].replace(': ','');
-              break;
-          }
+        // Mencocokkan nomor HP
+        const noHpRegex = /\*No Hp\* : ([^\n]+)/;
+        const noHpMatch = text.match(noHpRegex);
+        noHp = noHpMatch ? noHpMatch[1] : '';
 
+        // Mencocokkan alamat
+        const alamatRegex = /\*Alamat\* : ([^\n]+)/;
+        const alamatMatch = text.match(alamatRegex);
+        alamat = alamatMatch ? alamatMatch[1] : '';
 
-        }
+        // Mencocokkan kecamatan
+        const kecamatanRegex = /\*Kecamatan\* : ([^\n]+)/;
+        const kecamatanMatch = text.match(kecamatanRegex);
+        kecamatan = kecamatanMatch ? kecamatanMatch[1] : '';
+
+        // Mencocokkan kota/kabupaten
+        const kotaKabRegex = /\*Kota Kab\* : ([^\n]+)/;
+        const kotaKabMatch = text.match(kotaKabRegex);
+        kota = kotaKabMatch ? kotaKabMatch[1] : '';
+
+        // Mencocokkan provinsi
+        const provinsiRegex = /\*Provinsi\* : ([^\n]+)/;
+        const provinsiMatch = text.match(provinsiRegex);
+        provinsi = provinsiMatch ? provinsiMatch[1] : '';
+
+        // Mencocokkan produk
+        const produkRegex = /\*Produk\* : ([^\n]+)/;
+        const produkMatch = text.match(produkRegex);
+        produk = produkMatch ? produkMatch[1] : '';
       }
 
-      worksheet.addRow([ticket.id, nama, ticket.user.name, ticket.contact.number, alamat, kecamatan, kota, provinsi, produk ,(message.fromMe? 'CS:' : 'CT:')+ message.body, message.body.length, message.fromMe ? "" : message.body, message.fromMe ? message.body : "", message.createdAt, secondsDiffCustomer, secondsDiffCS, ticket.status]);
+      worksheet.addRow([ticket.id, nama, ticket.user.name, ticket.contact.number, alamat, kecamatan, kota, provinsi, produk, (message.fromMe ? 'CS:' : 'CT:') + message.body, message.body.length, message.fromMe ? "" : message.body, message.fromMe ? message.body : "", message.createdAt, secondsDiffCustomer, secondsDiffCS, ticket.status]);
       row++;
     }
     if ((row - 1) > rowStart) {
