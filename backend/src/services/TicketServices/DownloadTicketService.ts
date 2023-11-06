@@ -33,6 +33,11 @@ const DownloadTicketService = async (): Promise<Response> => {
       model: Whatsapp,
       as: "whatsapp",
       attributes: ["name"]
+    },
+    {
+      model: User,
+      as: "user",
+      attributes: ["id", "name"]
     }
   ];
 
