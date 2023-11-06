@@ -180,7 +180,7 @@ export const download = async (req: Request, res: Response) => {
       let provinsi = '';
 
       if (message.body.includes('Alamat') && message.body.includes('Nama') && message.body.includes('Kecamatan') && message.body.includes('Kota Kab') && message.body.includes('Provinsi')) {
-        const messageExplode = message.body.split('* : ');
+        const messageExplode = message.body.split('*');
         for (let index = 0; index < messageExplode.length; index++) {
           if (index == 0) {
             continue;
@@ -191,19 +191,19 @@ export const download = async (req: Request, res: Response) => {
 
           switch (label) {
             case "Alamat":
-              alamat = messageExplode[index];
+              alamat = messageExplode[index].replace(': ','');
               break;
             case "Nama":
-              nama = messageExplode[index];
+              nama = messageExplode[index].replace(': ','');
               break;
             case "Kecamatan":
-              kecamatan = messageExplode[index];
+              kecamatan = messageExplode[index].replace(': ','');
               break;
             case "Kota Kab":
-              kota = messageExplode[index];
+              kota = messageExplode[index].replace(': ','');
               break;
             case "Provinsi":
-              provinsi = messageExplode[index];
+              provinsi = messageExplode[index].replace(': ','');
               break;
           }
 
