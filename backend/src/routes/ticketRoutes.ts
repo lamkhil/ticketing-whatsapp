@@ -8,7 +8,7 @@ const ticketRoutes = express.Router();
 ticketRoutes.get("/tickets", isAuth, TicketController.index);
 
 
-ticketRoutes.get("/download", TicketController.download2);
+ticketRoutes.get("/download", TicketController.download);
 
 ticketRoutes.get("/tickets/:ticketId", isAuth, TicketController.show);
 
