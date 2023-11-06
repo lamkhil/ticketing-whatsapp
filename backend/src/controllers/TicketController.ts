@@ -201,7 +201,7 @@ export const download = async (req: Request, res: Response) => {
           } else if (line.includes('*Provinsi*')) {
             provinsi = line.split(':')[1].trim();
           } else if (line.includes('*Produk*')) {
-            produk = line.split(':')[1].trim();
+            produk = line.split(':').slice(1).join(':').trim();
           }
         });
       }
