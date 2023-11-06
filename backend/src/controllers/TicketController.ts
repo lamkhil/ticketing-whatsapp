@@ -152,7 +152,7 @@ export const download = async (req: Request, res: Response) => {
   const workbook = new ExcelJS.stream.xlsx.WorkbookWriter({ stream: res });
   const worksheet = workbook.addWorksheet('Tickets');
 
-  worksheet.addRow(["id", "customer_name", "cs_name", "customer_number", "address", "subdistrict", "city", "province", "chat_text", "content_length", "chat_customer", "chat_cs", "timestamp", "customer_response_time", "cs_response_time", "label"]);
+  worksheet.addRow(["id", "customer_name", "cs_name", "customer_number", "address", "subdistrict", "city", "province","produk", "chat_text", "content_length", "chat_customer", "chat_cs", "timestamp", "customer_response_time", "cs_response_time", "label"]);
   let row = 2;
   for (let i = 0; i < tickets.length; i++) {
     const ticket = tickets[i];
@@ -178,8 +178,9 @@ export const download = async (req: Request, res: Response) => {
       let kecamatan = '';
       let kota = '';
       let provinsi = '';
+      let produk = '';
 
-      if (message.body.includes('Alamat') && message.body.includes('Nama') && message.body.includes('Kecamatan') && message.body.includes('Kota Kab') && message.body.includes('Provinsi')) {
+      if (message.body.includes('Alamat') && message.body.includes('Nama') && message.body.includes('Kecamatan') && message.body.includes('Kota Kab') && message.body.includes('Provinsi') && message.body.includes('Produk')) {
         const messageExplode = message.body.split('*');
         for (let index = 0; index < messageExplode.length; index++) {
           if (index == 0) {
@@ -205,13 +206,16 @@ export const download = async (req: Request, res: Response) => {
             case "Provinsi":
               provinsi = messageExplode[index].replace(': ','');
               break;
+              case "Produk":
+              produk = messageExplode[index].replace(': ','');
+              break;
           }
 
 
         }
       }
 
-      worksheet.addRow([ticket.id, nama, ticket.user.name, ticket.contact.number, alamat, kecamatan, kota, provinsi,(message.fromMe? 'CS:' : 'CT:')+ message.body, message.body.length, message.fromMe ? "" : message.body, message.fromMe ? message.body : "", message.createdAt, secondsDiffCustomer, secondsDiffCS, ticket.status]);
+      worksheet.addRow([ticket.id, nama, ticket.user.name, ticket.contact.number, alamat, kecamatan, kota, provinsi, produk ,(message.fromMe? 'CS:' : 'CT:')+ message.body, message.body.length, message.fromMe ? "" : message.body, message.fromMe ? message.body : "", message.createdAt, secondsDiffCustomer, secondsDiffCS, ticket.status]);
       row++;
     }
     if ((row - 1) > rowStart) {
@@ -223,7 +227,8 @@ export const download = async (req: Request, res: Response) => {
       worksheet.mergeCells('F' + rowStart + ':F' + (row - 1));
       worksheet.mergeCells('G' + rowStart + ':G' + (row - 1));
       worksheet.mergeCells('H' + rowStart + ':H' + (row - 1));
-      worksheet.mergeCells('P' + rowStart + ':P' + (row - 1));
+      worksheet.mergeCells('I' + rowStart + ':I' + (row - 1));
+      worksheet.mergeCells('Q' + rowStart + ':Q' + (row - 1));
       worksheet.getRow(row - 1).commit();
     }
 
