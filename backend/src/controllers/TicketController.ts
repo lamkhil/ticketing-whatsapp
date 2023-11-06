@@ -188,8 +188,6 @@ export const download = async (req: Request, res: Response) => {
         const text = message.body;
 
         text.split('\n').forEach((line) => {
-          console.log('line', line);
-
           if (line.includes('*Alamat*')) {
             alamat = line.split(':')[1].trim();
           } else if (line.includes('*Nama*')) {
