@@ -180,7 +180,7 @@ export const download = async (req: Request, res: Response) => {
       let provinsi = '';
 
       if (message.body.includes('Alamat') && message.body.includes('Nama') && message.body.includes('Kecamatan') && message.body.includes('Kota Kab') && message.body.includes('Provinsi')) {
-        const messageExplode = message.body.split('*: ');
+        const messageExplode = message.body.split('* : ');
         for (let index = 0; index < messageExplode.length; index++) {
           if (index == 0) {
             continue;
