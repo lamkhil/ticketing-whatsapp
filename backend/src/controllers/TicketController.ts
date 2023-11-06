@@ -162,6 +162,15 @@ export const download = async (req: Request, res: Response) => {
       order: [["createdAt", "ASC"]]
     });
     let rowStart = row;
+
+    let id = ticket.id;
+    let alamat = '';
+    let nama = ticket.contact.name;
+    let kecamatan = '';
+    let kota = '';
+    let provinsi = '';
+    let produk = '';
+
     for (let j = 0; j < messages.length; j++) {
       let secondsDiffCustomer = 0;
       let secondsDiffCS = 0;
@@ -173,52 +182,28 @@ export const download = async (req: Request, res: Response) => {
           secondsDiffCustomer = Math.floor((message.createdAt.getTime() - messages[j - 1].createdAt.getTime()) / 1000);
         }
       }
-      let alamat = '';
-      let nama = ticket.contact.name;
-      let kecamatan = '';
-      let kota = '';
-      let provinsi = '';
-      let produk = '';
-      let noHp = ticket.contact.number;
 
       if (message.body.includes('Alamat') && message.body.includes('Nama') && message.body.includes('Kecamatan') && message.body.includes('Kota Kab') && message.body.includes('Provinsi') && message.body.includes('Produk')) {
 
         const text = message.body;
 
-        // Mencocokkan nama
-        const namaRegex = /\*Nama\* : ([^\n]+)/;
-        const namaMatch = text.match(namaRegex);
-        nama = namaMatch ? namaMatch[1] : '';
+        text.split('\n').forEach((line) => {
+          console.log('line', line);
 
-        // Mencocokkan nomor HP
-        const noHpRegex = /\*No Hp\* : ([^\n]+)/;
-        const noHpMatch = text.match(noHpRegex);
-        noHp = noHpMatch ? noHpMatch[1] : '';
-
-        // Mencocokkan alamat
-        const alamatRegex = /\*Alamat\* : ([^\n]+)/;
-        const alamatMatch = text.match(alamatRegex);
-        alamat = alamatMatch ? alamatMatch[1] : '';
-
-        // Mencocokkan kecamatan
-        const kecamatanRegex = /\*Kecamatan\* : ([^\n]+)/;
-        const kecamatanMatch = text.match(kecamatanRegex);
-        kecamatan = kecamatanMatch ? kecamatanMatch[1] : '';
-
-        // Mencocokkan kota/kabupaten
-        const kotaKabRegex = /\*Kota Kab\* : ([^\n]+)/;
-        const kotaKabMatch = text.match(kotaKabRegex);
-        kota = kotaKabMatch ? kotaKabMatch[1] : '';
-
-        // Mencocokkan provinsi
-        const provinsiRegex = /\*Provinsi\* : ([^\n]+)/;
-        const provinsiMatch = text.match(provinsiRegex);
-        provinsi = provinsiMatch ? provinsiMatch[1] : '';
-
-        // Mencocokkan produk
-        const produkRegex = /\*Produk\* : ([^\n]+)/;
-        const produkMatch = text.match(produkRegex);
-        produk = produkMatch ? produkMatch[1] : '';
+          if (line.includes('*Alamat*')) {
+            alamat = line.split(':')[1].trim();
+          } else if (line.includes('*Nama*')) {
+            nama = line.split(':')[1].trim();
+          } else if (line.includes('*Kecamatan*')) {
+            kecamatan = line.split(':')[1].trim();
+          } else if (line.includes('*Kota Kab*')) {
+            kota = line.split(':')[1].trim();
+          } else if (line.includes('*Provinsi*')) {
+            provinsi = line.split(':')[1].trim();
+          } else if (line.includes('*Produk*')) {
+            produk = line.split(':')[1].trim();
+          }
+        });
       }
 
       worksheet.addRow([ticket.id, nama, ticket.user.name, ticket.contact.number, alamat, kecamatan, kota, provinsi, produk, (message.fromMe ? 'CS:' : 'CT:') + message.body, message.body.length, message.fromMe ? "" : message.body, message.fromMe ? message.body : "", message.createdAt, secondsDiffCustomer, secondsDiffCS, ticket.status]);
@@ -226,15 +211,25 @@ export const download = async (req: Request, res: Response) => {
     }
     if ((row - 1) > rowStart) {
       worksheet.mergeCells('A' + rowStart + ':A' + (row - 1));
+      worksheet.getCell('A' + rowStart).value = id;
       worksheet.mergeCells('B' + rowStart + ':B' + (row - 1));
+      worksheet.getCell('B' + rowStart).value = nama;
       worksheet.mergeCells('C' + rowStart + ':C' + (row - 1));
+      worksheet.getCell('C' + rowStart).value = ticket.user.name;
       worksheet.mergeCells('D' + rowStart + ':D' + (row - 1));
+      worksheet.getCell('D' + rowStart).value = ticket.contact.number;
       worksheet.mergeCells('E' + rowStart + ':E' + (row - 1));
+      worksheet.getCell('E' + rowStart).value = alamat;
       worksheet.mergeCells('F' + rowStart + ':F' + (row - 1));
+      worksheet.getCell('F' + rowStart).value = kecamatan;
       worksheet.mergeCells('G' + rowStart + ':G' + (row - 1));
+      worksheet.getCell('G' + rowStart).value = kota;
       worksheet.mergeCells('H' + rowStart + ':H' + (row - 1));
+      worksheet.getCell('H' + rowStart).value = provinsi;
       worksheet.mergeCells('I' + rowStart + ':I' + (row - 1));
+      worksheet.getCell('I' + rowStart).value = produk;
       worksheet.mergeCells('Q' + rowStart + ':Q' + (row - 1));
+      worksheet.getCell('Q' + rowStart).value = ticket.status;
       worksheet.getRow(row - 1).commit();
     }
 
