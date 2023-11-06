@@ -174,7 +174,7 @@ export const download = async (req: Request, res: Response) => {
         }
       }
       let alamat = '';
-      let nama = '';
+      let nama = ticket.contact.name;
       let kecamatan = '';
       let kota = '';
       let provinsi = '';
