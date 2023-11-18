@@ -201,9 +201,9 @@ export const download = async (req: Request, res: Response) => {
       const message = messages[j];
       if (j > 0) {
         if (message.fromMe) {
-          secondsDiffCS = Math.floor((message.createdAt.getTime() - messages[j - 1].createdAt.getTime()) / 1000);
+          secondsDiffCS = (message.createdAt.getTime() - messages[j - 1].createdAt.getTime()) / 1000;
         } else {
-          secondsDiffCustomer = Math.floor((message.createdAt.getTime() - messages[j - 1].createdAt.getTime()) / 1000);
+          secondsDiffCustomer = (message.createdAt.getTime() - messages[j - 1].createdAt.getTime()) / 1000;
         }
       }
 

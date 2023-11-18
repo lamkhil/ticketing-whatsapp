@@ -55,34 +55,16 @@ const DownloadTicketService = async (
     }
   ];
 
-  if (whatsappId) {
-    const tickets = await Ticket.findAll({
-      include: includeCondition,
-      order: [["updatedAt", "DESC"]],
-      where: { [Op.or]: [{ status: "closed" }, { status: "unclosed" }], whatsappId }
-    });
-
-    return { tickets };
-  }
-
-
-  if (perpage && page) {
-    const limit = parseInt(perpage);
-    const offset = (parseInt(page) - 1) * limit;
-
-    const tickets = await Ticket.findAll({
-      include: includeCondition,
-      order: [["updatedAt", "DESC"]],
-      where: { [Op.or]: [{ status: "closed" }, { status: "unclosed" }] },
-      limit,
-      offset
-    });
-
-    return { tickets };
-  }
-
 
   let whereCondition: Filterable["where"] = {};
+
+  if (whatsappId) {
+    whereCondition = {
+      whatsappId: whatsappId
+    };
+  }
+
+
 
   if (start && end) {
     const startDate = +startOfDay(parseISO(start));
@@ -93,10 +75,16 @@ const DownloadTicketService = async (
     };
   }
 
+  const limit = perpage? parseInt(perpage) : undefined;
+  const offset = page && limit? ((parseInt(page) - 1) * limit) : undefined;
+
+
   const tickets = await Ticket.findAll({
     include: includeCondition,
     order: [["updatedAt", "DESC"]],
-    where: { [Op.or]: [{ status: "closed" }, { status: "unclosed" }], ...whereCondition }
+    where: { [Op.or]: [{ status: "closed" }, { status: "unclosed" }], ...whereCondition },
+    limit,
+    offset
   });
 
   return { tickets };

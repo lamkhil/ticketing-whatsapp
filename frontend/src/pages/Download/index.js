@@ -54,23 +54,6 @@ const useStyles = makeStyles(theme => ({
 	},
 }));
 
-const UserSchema = Yup.object().shape({
-	perpage: Yup.number()
-		.required("Required"),
-	page: Yup.number()
-		.required("Required")
-});
-const WhatsAppScheme = Yup.object().shape({
-	whatsappId: Yup.string()
-		.required("Required")
-});
-const DateScheme = Yup.object().shape({
-	start: Yup.date()
-		.required("Required"),
-	end: Yup.date()
-		.required("Required")
-});
-
 const Download = () => {
 	const classes = useStyles();
 	const history = useHistory();
@@ -84,28 +67,12 @@ const Download = () => {
 	};
 
 	const [param] = useState(initialState);
-	const [param2] = useState(initialState);
-	const [param3] = useState(initialState);
 
 	const { whatsApps, loading } = useContext(WhatsAppsContext);
 
-	const handleSignUp = async values => {
-		try {
-			window.open(`${api.defaults.baseURL}/download?perpage=${values.perpage}&page=${values.page}`);
-		} catch (err) {
-			toastError(err);
-		}
-	};
 	const handleDownload = async values => {
 		try {
-			window.open(`${api.defaults.baseURL}/download?start=${values.start}&end=${values.end}`);
-		} catch (err) {
-			toastError(err);
-		}
-	};
-	const handleDownloadUser = async values => {
-		try {
-			window.open(`${api.defaults.baseURL}/download?whatsappId=${values.whatsappId}`);
+			window.open(`${api.defaults.baseURL}/download?perpage=${values.perpage}&page=${values.page}&start=${values.start}&end=${values.end}&whatsappId=${values.whatsappId}`, '_blank');
 		} catch (err) {
 			toastError(err);
 		}
@@ -134,10 +101,9 @@ const Download = () => {
 			<Formik
 				initialValues={param}
 				enableReinitialize={true}
-				validationSchema={UserSchema}
 				onSubmit={(values, actions) => {
 					setTimeout(() => {
-						handleSignUp(values);
+						handleDownload(values);
 						actions.setSubmitting(false);
 					}, 400);
 				}}
@@ -175,34 +141,7 @@ const Download = () => {
 									autoComplete="page"
 								/>
 							</Grid>
-						</Grid>
-						<Button
-							type="submit"
-							fullWidth
-							variant="contained"
-							color="primary"
-							className={classes.submit}
-						>
-							Download Perpage
-						</Button>
 
-					</Form>
-				)}
-			</Formik>
-			<Formik
-				initialValues={param2}
-				enableReinitialize={true}
-				validationSchema={DateScheme}
-				onSubmit={(values, actions) => {
-					setTimeout(() => {
-						handleDownload(values);
-						actions.setSubmitting(false);
-					}, 400);
-				}}
-			>
-				{({ touched, errors, isSubmitting }) => (
-					<Form className={classes.form}>
-						<Grid container spacing={2}>
 							<Grid item xs={12}>
 								<Field
 									as={TextField}
@@ -231,35 +170,7 @@ const Download = () => {
 									type={'date'}
 								/>
 							</Grid>
-						</Grid>
-						<Button
-							type="submit"
-							fullWidth
-							variant="contained"
-							color="primary"
-							className={classes.submit}
-						>
-							Download Periode
-						</Button>
 
-					</Form>
-				)}
-			</Formik>
-
-			<Formik
-				initialValues={param3}
-				enableReinitialize={true}
-				validationSchema={WhatsAppScheme}
-				onSubmit={(values, actions) => {
-					setTimeout(() => {
-						handleDownloadUser(values);
-						actions.setSubmitting(false);
-					}, 400);
-				}}
-			>
-				{({ touched, errors, isSubmitting }) => (
-					<Form className={classes.form}>
-						<Grid container spacing={2}>
 							<Grid item xs={12}>
 								{loading ?
 									<>Loading...</> : <Field
@@ -281,7 +192,6 @@ const Download = () => {
 									</Field>
 								}
 							</Grid>
-
 						</Grid>
 						<Button
 							type="submit"
@@ -290,12 +200,13 @@ const Download = () => {
 							color="primary"
 							className={classes.submit}
 						>
-							Download PerAkun
+							Download
 						</Button>
 
 					</Form>
 				)}
 			</Formik>
+			
 			<Box mt={5}>{/* <Copyright /> */}</Box>
 		</Container>
 	);
