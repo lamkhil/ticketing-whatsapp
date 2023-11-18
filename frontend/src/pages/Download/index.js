@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
 
 import * as Yup from "yup";
 import { useHistory } from "react-router-dom";
@@ -11,16 +11,21 @@ import {
 	Button,
 	CssBaseline,
 	TextField,
+	Select,
 	Grid,
 	Box,
 	Typography,
 	Container,
 	InputAdornment,
 	IconButton,
-	Link
+	Link,
+	MenuItem
 } from '@material-ui/core';
 
 import { LockOutlined, Visibility, VisibilityOff } from '@material-ui/icons';
+
+
+import { WhatsAppsContext } from "../../context/WhatsApp/WhatsAppsContext";
 
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -55,6 +60,10 @@ const UserSchema = Yup.object().shape({
 	page: Yup.number()
 		.required("Required")
 });
+const WhatsAppScheme = Yup.object().shape({
+	whatsappId: Yup.string()
+		.required("Required")
+});
 const DateScheme = Yup.object().shape({
 	start: Yup.date()
 		.required("Required"),
@@ -70,11 +79,15 @@ const Download = () => {
 		perpage: "",
 		page: "",
 		start: "",
-		end: ""
+		end: "",
+		whatsappId: "",
 	};
 
 	const [param] = useState(initialState);
 	const [param2] = useState(initialState);
+	const [param3] = useState(initialState);
+
+	const { whatsApps, loading } = useContext(WhatsAppsContext);
 
 	const handleSignUp = async values => {
 		try {
@@ -86,6 +99,13 @@ const Download = () => {
 	const handleDownload = async values => {
 		try {
 			window.open(`${api.defaults.baseURL}/download?start=${values.start}&end=${values.end}`);
+		} catch (err) {
+			toastError(err);
+		}
+	};
+	const handleDownloadUser = async values => {
+		try {
+			window.open(`${api.defaults.baseURL}/download?whatsappId=${values.whatsappId}`);
 		} catch (err) {
 			toastError(err);
 		}
@@ -220,6 +240,57 @@ const Download = () => {
 							className={classes.submit}
 						>
 							Download Periode
+						</Button>
+
+					</Form>
+				)}
+			</Formik>
+
+			<Formik
+				initialValues={param3}
+				enableReinitialize={true}
+				validationSchema={WhatsAppScheme}
+				onSubmit={(values, actions) => {
+					setTimeout(() => {
+						handleDownloadUser(values);
+						actions.setSubmitting(false);
+					}, 400);
+				}}
+			>
+				{({ touched, errors, isSubmitting }) => (
+					<Form className={classes.form}>
+						<Grid container spacing={2}>
+							<Grid item xs={12}>
+								{loading ?
+									<>Loading...</> : <Field
+										as={Select}
+										variant="outlined"
+										fullWidth
+										name="whatsappId"
+										id="whatsappId"
+										autoComplete="whatsappId"
+										error={touched.whatsappId && Boolean(errors.whatsappId)}
+										helperText={touched.whatsappId && errors.whatsappId}
+										label={"Akun"}
+										placeholder={"Akun"}
+									>
+										<option key={''} value="">-- Pilih Akun --</option>
+										{whatsApps.map(whatsapp => (
+											<MenuItem key={whatsapp.id} value={whatsapp.id}>{whatsapp.name}</MenuItem>
+										))}
+									</Field>
+								}
+							</Grid>
+
+						</Grid>
+						<Button
+							type="submit"
+							fullWidth
+							variant="contained"
+							color="primary"
+							className={classes.submit}
+						>
+							Download PerAkun
 						</Button>
 
 					</Form>

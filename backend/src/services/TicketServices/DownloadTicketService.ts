@@ -14,6 +14,7 @@ interface Request {
   page?: string;
   start?: string;
   end?: string;
+  whatsappId?: string;
 }
 
 interface Response {
@@ -24,7 +25,8 @@ const DownloadTicketService = async (
   { perpage,
     page,
     start,
-    end
+    end,
+    whatsappId
   }: Request
 ): Promise<Response> => {
 
@@ -52,6 +54,16 @@ const DownloadTicketService = async (
       attributes: ["id", "name"]
     }
   ];
+
+  if (whatsappId) {
+    const tickets = await Ticket.findAll({
+      include: includeCondition,
+      order: [["updatedAt", "DESC"]],
+      where: { [Op.or]: [{ status: "closed" }, { status: "unclosed" }], whatsappId }
+    });
+
+    return { tickets };
+  }
 
 
   if (perpage && page) {

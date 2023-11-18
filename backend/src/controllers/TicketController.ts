@@ -29,6 +29,7 @@ type DownloadQuery = {
   page: string;
   start: string;
   end: string;
+  whatsappId: string;
 };
 
 interface TicketData {
@@ -153,7 +154,8 @@ export const download = async (req: Request, res: Response) => {
     perpage,
     page,
     start,
-    end
+    end,
+    whatsappId
   } = req.query as DownloadQuery;
 
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -166,7 +168,8 @@ export const download = async (req: Request, res: Response) => {
       perpage,
       page,
       start,
-      end
+      end,
+      whatsappId
     }
   );
 
