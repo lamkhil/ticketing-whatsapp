@@ -5,7 +5,7 @@ import { ToastContainer } from "react-toastify";
 import LoggedInLayout from "../layout";
 import Dashboard from "../pages/Dashboard/";
 import Tickets from "../pages/Tickets/";
-import Signup from "../pages/Signup/";
+import Signup from "../pages/SignUp";
 import Login from "../pages/Login/";
 import Connections from "../pages/Connections/";
 import Settings from "../pages/Settings/";
@@ -16,6 +16,7 @@ import Queues from "../pages/Queues/";
 import { AuthProvider } from "../context/Auth/AuthContext";
 import { WhatsAppsProvider } from "../context/WhatsApp/WhatsAppsContext";
 import Route from "./Route";
+import Downloads from "../pages/Download";
 
 const Routes = () => {
   return (
@@ -48,6 +49,7 @@ const Routes = () => {
                 isPrivate
               />
               <Route exact path="/Settings" component={Settings} isPrivate />
+              <Route exact path="/download" component={Downloads} isPrivate />
               <Route exact path="/Queues" component={Queues} isPrivate />
             </LoggedInLayout>
           </WhatsAppsProvider>

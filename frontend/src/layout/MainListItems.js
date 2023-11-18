@@ -127,19 +127,11 @@ const MainListItems = (props) => {
               primary={i18n.t("mainDrawer.listItems.settings")}
               icon={<SettingsOutlinedIcon />}
             />
-            <a href="https://api.aturchat.com/download" target="_blank" style={
-              {
-                "text-decoration": "none",
-  "color": "black"
-              }
-            }>
-              <li>
-                <ListItem>
-                  <ListItemIcon>{<DoneIcon />}</ListItemIcon>
-                  <ListItemText primary={"Download Excel"} />
-                </ListItem>
-              </li>
-            </a>
+            <ListItemLink
+              to="/download"
+              primary={"Download excel"}
+              icon={<DoneIcon />}
+            />
           </>
         )}
       />

@@ -27,14 +27,29 @@ const update = async (req: Request, res: Response): Promise<Response> => {
 };
 
 const remove = async (req: Request, res: Response): Promise<Response> => {
-  const { whatsappId } = req.params;
-  const whatsapp = await ShowWhatsAppService(whatsappId);
+  try {
+    const { whatsappId } = req.params;
+    const whatsapp = await ShowWhatsAppService(whatsappId);
 
-  const wbot = getWbot(whatsapp.id);
+    try {
+      const wbot = getWbot(whatsapp.id);
+      wbot.logout();
+    } catch (error) {
+      console.log(error);
+    }
 
-  wbot.logout();
+    const result = await UpdateWhatsAppService({
+      whatsappId,
+      whatsappData: { session: "" }
+    });
 
-  return res.status(200).json({ message: "Session disconnected." });
+  StartWhatsAppSession(result.whatsapp);
+
+    return res.status(200).json({ message: "Session disconnected." });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ message: "Error on disconnect session." });
+  }
 };
 
 export default { store, remove, update };

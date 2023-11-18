@@ -24,6 +24,13 @@ type IndexQuery = {
   queueIds: string;
 };
 
+type DownloadQuery = {
+  perpage: string;
+  page: string;
+  start: string;
+  end: string;
+};
+
 interface TicketData {
   contactId: number;
   status: string;
@@ -142,12 +149,26 @@ export const remove = async (
 
 export const download = async (req: Request, res: Response) => {
 
+  const {
+    perpage,
+    page,
+    start,
+    end
+  } = req.query as DownloadQuery;
+
   res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
   res.setHeader('Content-Disposition', 'attachment; filename="data.xlsx"');
   res.setHeader('Transfer-Encoding', 'chunked'); // Menggunakan HTTP chunked encoding
 
 
-  const { tickets } = await DownloadTicketService();
+  const { tickets } = await DownloadTicketService(
+    {
+      perpage,
+      page,
+      start,
+      end
+    }
+  );
 
   const workbook = new ExcelJS.stream.xlsx.WorkbookWriter({ stream: res });
   const worksheet = workbook.addWorksheet('Tickets');

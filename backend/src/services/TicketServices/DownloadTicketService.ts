@@ -9,12 +9,24 @@ import ShowUserService from "../UserServices/ShowUserService";
 import Whatsapp from "../../models/Whatsapp";
 import User from "../../models/User";
 
+interface Request {
+  perpage?: string;
+  page?: string;
+  start?: string;
+  end?: string;
+}
 
 interface Response {
   tickets: Ticket[];
 }
 
-const DownloadTicketService = async (): Promise<Response> => {
+const DownloadTicketService = async (
+  { perpage,
+    page,
+    start,
+    end
+  }: Request
+): Promise<Response> => {
 
   let includeCondition: Includeable[];
 
@@ -41,21 +53,41 @@ const DownloadTicketService = async (): Promise<Response> => {
     }
   ];
 
-  
 
-  
+  if (perpage && page) {
+    const limit = parseInt(perpage);
+    const offset = (parseInt(page) - 1) * limit;
 
-  
+    const tickets = await Ticket.findAll({
+      include: includeCondition,
+      order: [["updatedAt", "DESC"]],
+      where: { [Op.or]: [{ status: "closed" }, { status: "unclosed" }] },
+      limit,
+      offset
+    });
 
-  
+    return { tickets };
+  }
+
+
+  let whereCondition: Filterable["where"] = {};
+
+  if (start && end) {
+    const startDate = +startOfDay(parseISO(start));
+    const endDate = +endOfDay(parseISO(end));
+
+    whereCondition = {
+      updatedAt: { [Op.between]: [startDate, endDate] }
+    };
+  }
 
   const tickets = await Ticket.findAll({
     include: includeCondition,
     order: [["updatedAt", "DESC"]],
-    where: {[Op.or]:[{ status: "closed" }, { status: "unclosed" }]}
+    where: { [Op.or]: [{ status: "closed" }, { status: "unclosed" }], ...whereCondition }
   });
 
-  return {tickets};
+  return { tickets };
 };
 
 export default DownloadTicketService;
